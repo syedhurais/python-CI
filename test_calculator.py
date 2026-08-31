@@ -1,7 +1,6 @@
 import unittest
 from calculator import add, subtract, multiply
 
-
 class TestCalculator(unittest.TestCase):
 
     def test_add_two_positive_numbers(self):
@@ -15,7 +14,6 @@ class TestCalculator(unittest.TestCase):
 
     def test_multiply_numbers(self):
         self.assertEqual(multiply(3, 5), 15)
-
 
 if __name__ == "__main__":
     unittest.main()
