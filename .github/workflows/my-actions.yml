@@ -23,10 +23,11 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Check formatting with Black
-        run: black .
+        run: black --check .
 
       - name: Run Flake8
         run: flake8 .
+
 
   test:
     name: Test
@@ -51,15 +52,13 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover -v
 
+
   build:
     name: Build
     runs-on: ubuntu-latest
     needs: test
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
       - name: Checkout repository
         uses: actions/checkout@v6
 
@@ -83,9 +82,15 @@ jobs:
           name: python-package
           path: dist/
 
-      - name: Notify Slack
-        if: always()
-        continue-on-error: true
+
+  notify-slack:
+    name: Notify Slack
+    runs-on: ubuntu-latest
+    needs: [lint, test, build]
+    if: always()
+
+    steps:
+      - name: Send Slack notification
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
